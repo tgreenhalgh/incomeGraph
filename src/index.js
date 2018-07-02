@@ -11,3 +11,5 @@ ReactDOM.render(
   </Router>,
   document.getElementById('root'),
 );
+
+// Comment for test purposes
