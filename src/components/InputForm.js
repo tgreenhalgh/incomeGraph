@@ -1,6 +1,7 @@
 import React from 'react';
 /* prettier-ignore */
 import { Button, Form, FormGroup, Label, Input } from 'reactstrap';
+import Graph from './Graph';
 
 class InputForm extends React.Component {
   constructor(props) {
@@ -12,11 +13,12 @@ class InputForm extends React.Component {
       retireAge: 65,
       curIncome: 45000,
       newIncome: 70000,
-      curTaxRate: 0.2,
-      newTaxRate: 0.12,
+      curTaxRate: 0.22,
+      newTaxRate: 0.22,
       investments: 0.11,
       married: false,
       annualRaise: 0.04,
+      data: [],
     };
   }
 
@@ -70,87 +72,98 @@ class InputForm extends React.Component {
     this.setState({ curTaxRate, newTaxRate });
   };
 
+  handleFormSubmit = e => {
+    e.preventDefault();
+    this.props.handleUserUpdate(this.state);
+  };
+
   render() {
     return (
-      <Form inline>
-        <div className="row">
-          <div className="col-sm-4">
-            <FormGroup>
-              <Label>Name</Label>
-              <Input
-                name="name"
-                onChange={this.handleInputChange}
-                placeholder="Enter your name"
-                value={this.state.name}
-              />
-            </FormGroup>
-          </div>
-          <div className="col-sm">
-            <FormGroup>
-              <Label style={{ padding: '0 5px' }}>Age</Label>
-              <Input
-                style={{ width: '35%' }}
-                type="number"
-                name="age"
-                onChange={this.handleInputChange}
-                value={this.state.age}
-              />
-            </FormGroup>
-          </div>
-          <div className="col-sm">
-            <FormGroup>
-              <Label style={{ padding: '0 5px' }}>Retire Age</Label>
-              <Input
-                style={{ width: '36%' }}
-                type="number"
-                name="retireAge"
-                onChange={this.handleInputChange}
-                value={this.state.retireAge}
-              />
-            </FormGroup>
-          </div>
-          <div className="col-sm">
-            <FormGroup check>
-              <Label check>
+      <React.Fragment>
+        <Form inline>
+          <div className="row">
+            <div className="col-sm-4">
+              <FormGroup>
+                <Label>Name</Label>
                 <Input
-                  type="checkbox"
-                  name="married"
-                  onChange={this.handleCheckChange}
-                  value={this.state.married}
+                  name="name"
+                  onChange={this.handleInputChange}
+                  placeholder="Enter your name"
+                  value={this.state.name}
                 />
-                Married
-              </Label>
-            </FormGroup>
-            <Button>Submit</Button>
+              </FormGroup>
+            </div>
+            <div className="col-sm">
+              <FormGroup>
+                <Label style={{ padding: '0 5px' }}>Age</Label>
+                <Input
+                  style={{ width: '35%' }}
+                  type="number"
+                  name="age"
+                  onChange={this.handleInputChange}
+                  value={this.state.age}
+                />
+              </FormGroup>
+            </div>
+            <div className="col-sm">
+              <FormGroup>
+                <Label style={{ padding: '0 5px' }}>Retire Age</Label>
+                <Input
+                  style={{ width: '36%' }}
+                  type="number"
+                  name="retireAge"
+                  onChange={this.handleInputChange}
+                  value={this.state.retireAge}
+                />
+              </FormGroup>
+            </div>
+            <div className="col-sm">
+              <FormGroup check>
+                <Label check>
+                  <Input
+                    type="checkbox"
+                    name="married"
+                    onChange={this.handleCheckChange}
+                    value={this.state.married}
+                  />
+                  Married
+                </Label>
+              </FormGroup>
+            </div>
           </div>
-        </div>
-        <div className="row">
-          <div className="col">
-            <FormGroup>
-              <Label style={{ padding: '0 5px' }}>Current Salary</Label>
-              <Input
-                style={{ width: '50%' }}
-                type="number"
-                name="curIncome"
-                onChange={this.handleInputChange}
-                value={this.state.curIncome}
-              />
-            </FormGroup>
+          <div className="row">
+            <div className="col">
+              <FormGroup>
+                <Label style={{ padding: '0 5px' }}>Current Salary</Label>
+                <Input
+                  style={{ width: '50%' }}
+                  type="number"
+                  name="curIncome"
+                  onChange={this.handleInputChange}
+                  value={this.state.curIncome}
+                />
+              </FormGroup>
+            </div>
+            <div className="col">
+              <FormGroup>
+                <Label style={{ padding: '0 5px' }}>New Salary</Label>
+                <Input
+                  style={{ width: '50%' }}
+                  type="number"
+                  name="newIncome"
+                  onChange={this.handleInputChange}
+                  value={this.state.newIncome}
+                />
+              </FormGroup>
+            </div>
+            <Button color="success" onClick={this.handleFormSubmit}>
+              Submit
+            </Button>
           </div>
-          <div className="col">
-            <FormGroup>
-              <Label style={{ padding: '0 5px' }}>New Salary</Label>
-              <Input
-                style={{ width: '50%' }}
-                type="number"
-                name="newIncome"
-                onChange={this.handleInputChange}
-                value={this.state.newIncome}
-              />
-            </FormGroup>
-          </div>
-        </div>
-      </Form>
+        </Form>
+        <hr />
+        <Graph data={this.state.data} />
+      </React.Fragment>
     );
   }
 }

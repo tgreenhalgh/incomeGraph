@@ -10,10 +10,6 @@ const Header = props => {
     props.history.push('/form');
   };
 
-  const graphClick = () => {
-    props.history.push('/graph');
-  };
-
   return (
     <div className="row">
       <div className="col-sm-4">
@@ -28,9 +24,6 @@ const Header = props => {
       <div className="col-sm-8">
         <Button color="info" onClick={formClick}>
           Form
-        </Button>
-        <Button color="info" onClick={graphClick}>
-          Graph
         </Button>
       </div>
     </div>
