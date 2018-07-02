@@ -21,6 +21,7 @@ class InputForm extends React.Component {
       percentInvested: 0.17,
       curData: [],
       newData: [],
+      labels: [],
     };
   }
 
@@ -31,11 +32,14 @@ class InputForm extends React.Component {
   calculateData = () => {
     let curData = [];
     let newData = [];
+    let labels = [];
     for (let i = 0; i < 40; i++) {
       curData.push(25000 + i * 1000);
       newData.push(55000 + i * 1000);
+      labels.push(2018 + i);
     }
-    this.setState({ curData, newData });
+
+    this.setState({ curData, newData, labels });
 
     /* prettier-ignore */
     let {age, retireAge, curIncome, newIncome, curTaxRate, newTaxRate, investmentReturn, married, annualRaise, percentInvested} = this.state;
@@ -47,6 +51,7 @@ class InputForm extends React.Component {
     let name = e.target.name;
     this.setState({ [name]: e.target.value });
     if (name === 'curIncome' || name === 'newIncome') this.setTaxRate();
+    this.calculateData();
   };
 
   handleCheckChange = e => {
@@ -175,7 +180,11 @@ class InputForm extends React.Component {
           </div>
         </Form>
         <hr />
-        <Graph curData={this.state.curData} newData={this.state.newData} />
+        <Graph
+          curData={this.state.curData}
+          newData={this.state.newData}
+          labels={this.state.labels}
+        />
       </React.Fragment>
     );
   }
