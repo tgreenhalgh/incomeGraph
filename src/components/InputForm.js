@@ -28,8 +28,8 @@ class InputForm extends React.Component {
     this.setState({ married: !this.state.married });
   };
 
-  calculateTaxRate = () => {
-    /*
+  calculateTaxRate = income => {
+    /* 2018 tax form
   10%	Up to $9,525	        Up to $19,050
   12%	$9,526 to $38,700	    $19,051 to $77,400
   22%	38,701 to $82,500	    $77,401 to $165,000
@@ -38,25 +38,33 @@ class InputForm extends React.Component {
   35%	$200,001 to $500,000	$400,001 to $600,000
   37%	over $500,000	        over  $600,000
 */
-    let curTaxRate, newTaxRate;
-    let curIncome = this.state.curIncome;
-    let newIncome = this.state.newIncome;
-    //current tax rate
-    if (!this.state.married) {
-      if (curIncome < 9526) curTaxRate = 0.1;
-    } else if (curIncome < 38701) {
-      curTaxRate = 0.12;
-    } else if (curIncome < 82501) {
-      curTaxRate = 0.22;
-    } else if (curIncome < 157501) {
-      curTaxRate = 0.24;
-    } else if (curIncome < 200001) {
-      curTaxRate = 0.32;
-    } else if (curIncome < 500000) {
-      curTaxRate = 0.35;
+    let double = 1;
+    if (this.state.married) double = 2;
+
+    if (income < 9525 * double + 1) {
+      return 0.1;
+    } else if (income < 38700 * double + 1) {
+      return 0.12;
+    } else if (income < 82500 * double + 1) {
+      return 0.22;
+    } else if (income < 157500 * double + 1) {
+      return 0.24;
+    } else if (income < 200000 * double + 1) {
+      return 0.32;
+    } else if (
+      (income < 500001 && !this.state.married) ||
+      (income < 600001 && this.state.married)
+    ) {
+      return 0.35;
     } else {
-      curIncome = 0.37;
+      return 0.37;
     }
+  };
+
+  setTaxRate = () => {
+    let curTaxRate = this.calculateTaxRate(this.state.curIncome);
+    let newTaxRate = this.calculateTaxRate(this.state.newIncome);
+    this.setState({ curTaxRate, newTaxRate });
   };
 
   render() {
