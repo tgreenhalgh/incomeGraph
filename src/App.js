@@ -41,7 +41,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <Route exact path="/" component={Header} />
+        <Route path="/" component={Header} />
         <Route
           exact
           path="/graph"
