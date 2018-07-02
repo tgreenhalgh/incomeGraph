@@ -12,4 +12,3 @@ ReactDOM.render(
   document.getElementById('root'),
 );
 
-// Comment for test purposes
