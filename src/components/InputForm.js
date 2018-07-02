@@ -15,10 +15,12 @@ class InputForm extends React.Component {
       newIncome: 70000,
       curTaxRate: 0.22,
       newTaxRate: 0.22,
-      investments: 0.11,
+      investmentReturn: 0.11,
       married: false,
       annualRaise: 0.04,
-      data: [],
+      percentInvested: 0.17,
+      curData: [],
+      newData: [],
     };
   }
 
@@ -27,9 +29,18 @@ class InputForm extends React.Component {
   }
 
   calculateData = () => {
-    let data = [];
-    for (let i = 0; i < 40; i++) data.push(25000 + i * 1000);
-    this.setState({ data });
+    let curData = [];
+    let newData = [];
+    for (let i = 0; i < 40; i++) {
+      curData.push(25000 + i * 1000);
+      newData.push(55000 + i * 1000);
+    }
+    this.setState({ curData, newData });
+
+    /* prettier-ignore */
+    let {age, retireAge, curIncome, newIncome, curTaxRate, newTaxRate, investmentReturn, married, annualRaise, percentInvested} = this.state;
+    // how long 'til retire
+    let yearsWorking = retireAge - age;
   };
 
   handleInputChange = e => {
@@ -164,7 +175,7 @@ class InputForm extends React.Component {
           </div>
         </Form>
         <hr />
-        <Graph data={this.state.data} />
+        <Graph curData={this.state.curData} newData={this.state.newData} />
       </React.Fragment>
     );
   }
