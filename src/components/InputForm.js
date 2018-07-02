@@ -21,11 +21,14 @@ class InputForm extends React.Component {
   }
 
   handleInputChange = e => {
-    this.setState({ [e.target.name]: e.target.value });
+    let name = e.target.name;
+    this.setState({ [name]: e.target.value });
+    if (name === 'curIncome' || name === 'newIncome') this.setTaxRate();
   };
 
   handleCheckChange = e => {
     this.setState({ married: !this.state.married });
+    this.setTaxRate();
   };
 
   calculateTaxRate = income => {
