@@ -33,10 +33,11 @@ class InputForm extends React.Component {
     let curData = [];
     let newData = [];
     let labels = [];
+    let yearStart = new Date().getFullYear() + 1;
     for (let i = 0; i < 40; i++) {
       curData.push(25000 + i * 1000);
       newData.push(55000 + i * 1000);
-      labels.push(2018 + i);
+      labels.push(yearStart + i);
     }
 
     this.setState({ curData, newData, labels });
@@ -61,14 +62,14 @@ class InputForm extends React.Component {
 
   calculateTaxRate = income => {
     /* 2018 tax form
-  10%	Up to $9,525	        Up to $19,050
-  12%	$9,526 to $38,700	    $19,051 to $77,400
-  22%	38,701 to $82,500	    $77,401 to $165,000
-  24%	$82,501 to $157,500	  $165,001 to $315,000
-  32%	$157,501 to $200,000	$315,001 to $400,000
-  35%	$200,001 to $500,000	$400,001 to $600,000
-  37%	over $500,000	        over  $600,000
-*/
+      10%	Up to $9,525	        Up to $19,050
+      12%	$9,526 to $38,700	    $19,051 to $77,400
+      22%	38,701 to $82,500	    $77,401 to $165,000
+      24%	$82,501 to $157,500	  $165,001 to $315,000
+      32%	$157,501 to $200,000	$315,001 to $400,000
+      35%	$200,001 to $500,000	$400,001 to $600,000
+      37%	over $500,000	        over  $600,000
+    */
     let double = 1;
     if (this.state.married) double = 2;
 
@@ -179,6 +180,10 @@ class InputForm extends React.Component {
             </div>
           </div>
         </Form>
+        The calculations are starting January 1, {this.state.labels[0]} and
+        assuming the first two years are paying back Lambda School at 17%, then
+        investing that 17% in a general S&P 500 Index fund (~11% return from
+        1973-2016)
         <hr />
         <Graph
           curData={this.state.curData}
