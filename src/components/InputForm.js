@@ -1,6 +1,6 @@
 import React from 'react';
 /* prettier-ignore */
-import { Button, Form, FormGroup, Label, Input } from 'reactstrap';
+import { Form, FormGroup, Label, Input } from 'reactstrap';
 import Graph from './Graph';
 
 class InputForm extends React.Component {
@@ -70,11 +70,6 @@ class InputForm extends React.Component {
     let curTaxRate = this.calculateTaxRate(this.state.curIncome);
     let newTaxRate = this.calculateTaxRate(this.state.newIncome);
     this.setState({ curTaxRate, newTaxRate });
-  };
-
-  handleFormSubmit = e => {
-    e.preventDefault();
-    this.props.handleUserUpdate(this.state);
   };
 
   render() {
@@ -156,9 +151,6 @@ class InputForm extends React.Component {
                 />
               </FormGroup>
             </div>
-            <Button color="success" onClick={this.handleFormSubmit}>
-              Submit
-            </Button>
           </div>
         </Form>
         <hr />
