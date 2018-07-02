@@ -22,6 +22,16 @@ class InputForm extends React.Component {
     };
   }
 
+  componentDidMount() {
+    this.calculateData();
+  }
+
+  calculateData = () => {
+    let data = [];
+    for (let i = 0; i < 40; i++) data.push(25000 + i * 1000);
+    this.setState({ data });
+  };
+
   handleInputChange = e => {
     let name = e.target.name;
     this.setState({ [name]: e.target.value });
