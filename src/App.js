@@ -35,7 +35,7 @@ class App extends Component {
             <Graph
               {...props}
               handleUpdate={this.updateData}
-              data={JSON.stringify(this.state.data)}
+              data={this.state.data}
             />
           )}
         />
