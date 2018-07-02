@@ -8,23 +8,9 @@ import './App.css';
 class App extends Component {
   constructor() {
     super();
+    /* prettier-ignore */
     this.state = {
-      data: [
-        {
-          key: 'ABC',
-          values: [
-            {
-              Client: 'ABC',
-              sale: '202',
-              year: '2000',
-            },
-            {
-              Client: 'ABC',
-              sale: '215',
-              year: '2002',
-            },
-          ],
-        },
+      data: [20000,21000,22000,24000,25000,26000,27000,28000,29000,30000,31000,32000,33000,34000,35000
       ],
       userInfo: {},
     };
