@@ -22,7 +22,7 @@ class InputForm extends React.Component {
       newIncome: 70000,
       curInvestment: 0,
       newInvestment: 0,
-      investmentReturn: 0.1,
+      investmentReturn: 10,
       married: false,
       annualRaise: 0.04,
       percentOfIncomeToInvest: 17,
@@ -55,6 +55,7 @@ class InputForm extends React.Component {
     let labels = [];
     let yearStart = new Date().getFullYear() + 1;
     let percentOfIncomeToInvest = this.state.percentOfIncomeToInvest / 100;
+    let investmentReturn = this.state.investmentReturn / 100;
 
     if (current) {
       annualSalary = this.state.curIncome;
@@ -84,8 +85,7 @@ class InputForm extends React.Component {
         else investedAmount = 0;
       }
 
-      investedTotal =
-        investedTotal * (1 + this.state.investmentReturn) + investedAmount;
+      investedTotal = investedTotal * (1 + investmentReturn) + investedAmount;
 
       salaryTotal += afterInvestedSalary;
       netWorth = salaryTotal + investedTotal;
@@ -223,7 +223,7 @@ class InputForm extends React.Component {
                 />
               </FormGroup>
             </div>
-            <div className="col-sm all">
+            <div style={{ marginLeft: '-80px' }} className="col-sm all">
               <FormGroup>
                 <Label style={{ padding: '0 5px' }}>Retire Age</Label>
                 <Input
@@ -235,7 +235,7 @@ class InputForm extends React.Component {
                 />
               </FormGroup>
             </div>
-            <div className="col-sm all">
+            <div style={{ marginLeft: '-34px' }} className="col-sm all">
               <FormGroup>
                 <Label style={{ padding: '0 5px' }}>% invested</Label>
                 <Input
@@ -244,6 +244,18 @@ class InputForm extends React.Component {
                   name="percentOfIncomeToInvest"
                   onChange={this.handleInputChange}
                   value={this.state.percentOfIncomeToInvest}
+                />
+              </FormGroup>
+            </div>
+            <div style={{ marginLeft: '-32px' }} className="col-sm all">
+              <FormGroup>
+                <Label style={{ padding: '0 5px' }}>return %</Label>
+                <Input
+                  style={{ width: '70px' }}
+                  type="number"
+                  name="investmentReturn"
+                  onChange={this.handleInputChange}
+                  value={this.state.investmentReturn}
                 />
               </FormGroup>
             </div>
