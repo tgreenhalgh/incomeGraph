@@ -18,10 +18,14 @@ class InputForm extends React.Component {
       investmentReturn: 0.1,
       married: false,
       annualRaise: 0.04,
-      percentInvested: 0.17,
+      percentToInvest: 0.17,
       curData: [],
       newData: [],
+      newDataNoInvest: [],
       labels: [],
+      curMax: 0,
+      newMax: 0,
+      paidBack: 0,
     };
   }
 
@@ -30,67 +34,96 @@ class InputForm extends React.Component {
   }
 
   calculateData = () => {
-    let curData = [];
-    let newData = [];
-    let labels = [];
-    let yearStart = new Date().getFullYear() + 1;
-    for (let i = 0; i < 40; i++) {
-      curData.push(25000 + i * 1000);
-      newData.push(55000 + i * 1000);
-      labels.push(yearStart + i);
-    }
-
-    this.setState({ curData, newData, labels });
-
     /* prettier-ignore */
     let {age, retireAge} = this.state;
-    // how long 'til retire
     let yearsWorking = retireAge - age;
+
     //true means current salary
     this.makeDataArr(yearsWorking, true);
     //false means new salary
-    // this.makeDataArr(yearsWorking, false);
+    this.makeDataArr(yearsWorking, false);
   };
 
   makeDataArr = (years, current) => {
-    console.log(years, current);
-    let income, maxSalary, percentInvested;
+    let income, maxSalary, percentToInvest;
+    let labels = [];
+    let yearStart = new Date().getFullYear() + 1;
+
     if (current) {
       income = this.state.curIncome;
       maxSalary = 100000;
-      percentInvested = .05;
+      // percentToInvest = 0.0;
+      percentToInvest = 0.17;
     } else {
       income = this.state.newIncome;
       maxSalary = 150000;
-      percentInvested = this.state.percentInvested;
+      // percentToInvest = 0;
+      percentToInvest = this.state.percentToInvest;
     }
-    
+
     let dataArr = [];
-    let investedMoney = 0;
+    let newDataNoInvest = [];
+    let owedLambda = 0;
+    let investedTotal = 0;
+    let salaryTotal = 0;
+    let netWorth = 0;
 
     for (let i = 0; i <= years; i++) {
-      let afterTaxes = income - (income * this.calculateTaxRate(income));
-      let invested = afterTaxes * percentInvested;
-      let afterInvested = afterTaxes - invested;
-      investedMoney = investedMoney * (1 + this.state.investmentReturn) + invested;
+      let afterTaxesSalary = income - income * this.calculateTaxRate(income);
+      let investedAmount = afterTaxesSalary * percentToInvest;
+      let afterInvestedSalary = afterTaxesSalary - investedAmount;
 
-      let netWorth = afterInvested + investedMoney;
+      //pay back Lambda School
+      if (!current && owedLambda < 30001 && i < 2 && income > 50000) {
+        owedLambda += income * 0.17;
+        if (owedLambda > 30000) investedAmount = owedLambda - 30000;
+        else investedAmount = 0;
+      }
+
+      investedTotal =
+        investedTotal * (1 + this.state.investmentReturn) + investedAmount;
+
+      salaryTotal += afterInvestedSalary;
+      netWorth = salaryTotal + investedTotal;
+      //for no invest graph
+      newDataNoInvest.push(salaryTotal);
       dataArr.push(Number(netWorth.toFixed(2)));
+
+      //labels for graph
+      labels.push(yearStart + i);
+
       //annual raise
-      if (income < maxSalary) income *= (1 + this.state.annualRaise);
+      if (income < maxSalary) income *= 1 + this.state.annualRaise;
     }
     if (current) {
-      this.setState({curData: dataArr})
+      this.setState({
+        curData: dataArr,
+        curMax: dataArr[dataArr.length - 1],
+        newDataNoInvest,
+        labels,
+      });
     } else {
-      this.setState({newData: dataArr})
+      this.setState({
+        newData: dataArr,
+        newMax: dataArr[dataArr.length - 1],
+        newDataNoInvest,
+        labels,
+      });
     }
-  }
+  };
 
   handleInputChange = e => {
     let name = e.target.name;
-    this.setState({ [name]: e.target.value });
-    if (name === 'curIncome' || name === 'newIncome') this.setTaxRate();
-    this.calculateData();
+    let value = e.target.value;
+    if (name === 'age' && value < 18) value = 18;
+    if (name === 'retireAge' && value <= this.state.age)
+      value = this.state.age + 1;
+    if (name === 'curIncome' && value < 0) value = 0;
+    if (name === 'newIncome' && value < 0) value = 0;
+    this.setState({ [name]: value });
+    setTimeout(() => {
+      this.calculateData();
+    }, 0);
   };
 
   handleCheckChange = e => {
@@ -102,10 +135,10 @@ class InputForm extends React.Component {
 
   calculateTaxRate = income => {
     /* 2018 tax form
-      10%	Up to $9,525	        Up to $19,050
-      12%	$9,526 to $38,700	    $19,051 to $77,400
-      22%	38,701 to $82,500	    $77,401 to $165,000
-      24%	$82,501 to $157,500	  $165,001 to $315,000
+      10%	Up       to   $9,525	      Up to  $19,050
+      12%	$9,526   to  $38,700	 $19,051 to  $77,400
+      22%	38,701   to  $82,500	 $77,401 to $165,000
+      24%	$82,501  to $157,500	$165,001 to $315,000
       32%	$157,501 to $200,000	$315,001 to $400,000
       35%	$200,001 to $500,000	$400,001 to $600,000
       37%	over $500,000	        over  $600,000
@@ -216,8 +249,24 @@ class InputForm extends React.Component {
         </Form>
         The calculations are starting January 1, {this.state.labels[0]} and
         assuming the first two years are paying back Lambda School at 17%, then
-        investing that 17% in a general S&P 500 Index fund (~10% return from
-        1987-2017)
+        investing that 17% in a general S&P 500 Index fund (~10% historical
+        return over long periods of time).<br />
+        <span>
+          Lambda total ({this.state.newMax.toLocaleString('en-US', {
+            style: 'currency',
+            currency: 'USD',
+          })}){' - '}pre total: ({this.state.curMax.toLocaleString('en-US', {
+            style: 'currency',
+            currency: 'USD',
+          })}){':  '}
+          for a difference of{' '}
+          <strong>
+            {(this.state.newMax - this.state.curMax).toLocaleString('en-US', {
+              style: 'currency',
+              currency: 'USD',
+            })}
+          </strong>
+        </span>
         <hr />
         <Graph
           curData={this.state.curData}
