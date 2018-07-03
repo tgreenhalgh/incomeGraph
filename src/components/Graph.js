@@ -63,7 +63,7 @@ class Graph extends React.Component {
           labels: this.props.labels,
           datasets: [
             {
-              label: 'Current Income',
+              label: 'Pre Lambda',
               fill: false,
               lineTension: 0.1,
               backgroundColor: '#b5b5b5',
@@ -84,7 +84,7 @@ class Graph extends React.Component {
               data: this.props.curData,
             },
             {
-              label: 'New Income',
+              label: 'Post Lambda',
               fill: false,
               lineTension: 0.1,
               backgroundColor: '#A0001E',
@@ -118,7 +118,7 @@ class Graph extends React.Component {
           options={{
             title: {
               display: true,
-              text: 'Current and New Income Projections',
+              text: 'Net Worth Projections',
               fontSize: 25,
             },
           }}

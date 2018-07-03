@@ -51,20 +51,17 @@ class InputForm extends React.Component {
   };
 
   makeDataArr = (years, current) => {
-    let annualSalary, maxSalary, percentOfIncomeToInvest;
+    let annualSalary, maxSalary;
     let labels = [];
     let yearStart = new Date().getFullYear() + 1;
+    let percentOfIncomeToInvest = this.state.percentOfIncomeToInvest / 100;
 
     if (current) {
       annualSalary = this.state.curIncome;
       maxSalary = 100000;
-      // percentOfIncomeToInvest = 0.0;
-      percentOfIncomeToInvest = 0.17;
     } else {
       annualSalary = this.state.newIncome;
       maxSalary = 150000;
-      // percentOfIncomeToInvest = 0;
-      percentOfIncomeToInvest = this.state.percentOfIncomeToInvest / 100;
     }
 
     let dataArr = [];
@@ -179,8 +176,8 @@ class InputForm extends React.Component {
         <StyledDiv>
           The calculations are starting January 1, {this.state.labels[0]} and
           assuming the first two years are paying back Lambda School at 17%,
-          then investing that 17% in a general S&P 500 Index fund (~10%
-          historical return over long periods of time).<br />
+          then investing that {this.state.percentOfIncomeToInvest}% in a general
+          S&P 500 Index fund (~10% historical return over long periods of time).<br />
           {this.state.newMax && this.state.curMax ? (
             <span>
               Lambda total ({this.state.newMax.toLocaleString('en-US', {
