@@ -13,9 +13,9 @@ class InputForm extends React.Component {
       retireAge: 65,
       curIncome: 45000,
       newIncome: 70000,
-      curTaxRate: 0.22,
-      newTaxRate: 0.22,
-      investmentReturn: 0.11,
+      curInvestment: 0,
+      newInvestment: 0,
+      investmentReturn: 0.1,
       married: false,
       annualRaise: 0.04,
       percentInvested: 0.17,
@@ -43,10 +43,48 @@ class InputForm extends React.Component {
     this.setState({ curData, newData, labels });
 
     /* prettier-ignore */
-    let {age, retireAge, curIncome, newIncome, curTaxRate, newTaxRate, investmentReturn, married, annualRaise, percentInvested} = this.state;
+    let {age, retireAge} = this.state;
     // how long 'til retire
     let yearsWorking = retireAge - age;
+    //true means current salary
+    this.makeDataArr(yearsWorking, true);
+    //false means new salary
+    // this.makeDataArr(yearsWorking, false);
   };
+
+  makeDataArr = (years, current) => {
+    console.log(years, current);
+    let income, maxSalary, percentInvested;
+    if (current) {
+      income = this.state.curIncome;
+      maxSalary = 100000;
+      percentInvested = .05;
+    } else {
+      income = this.state.newIncome;
+      maxSalary = 150000;
+      percentInvested = this.state.percentInvested;
+    }
+    
+    let dataArr = [];
+    let investedMoney = 0;
+
+    for (let i = 0; i <= years; i++) {
+      let afterTaxes = income - (income * this.calculateTaxRate(income));
+      let invested = afterTaxes * percentInvested;
+      let afterInvested = afterTaxes - invested;
+      investedMoney = investedMoney * (1 + this.state.investmentReturn) + invested;
+
+      let netWorth = afterInvested + investedMoney;
+      dataArr.push(Number(netWorth.toFixed(2)));
+      //annual raise
+      if (income < maxSalary) income *= (1 + this.state.annualRaise);
+    }
+    if (current) {
+      this.setState({curData: dataArr})
+    } else {
+      this.setState({newData: dataArr})
+    }
+  }
 
   handleInputChange = e => {
     let name = e.target.name;
@@ -57,7 +95,9 @@ class InputForm extends React.Component {
 
   handleCheckChange = e => {
     this.setState({ married: !this.state.married });
-    this.setTaxRate();
+    setTimeout(() => {
+      this.calculateData();
+    }, 0);
   };
 
   calculateTaxRate = income => {
@@ -91,12 +131,6 @@ class InputForm extends React.Component {
     } else {
       return 0.37;
     }
-  };
-
-  setTaxRate = () => {
-    let curTaxRate = this.calculateTaxRate(this.state.curIncome);
-    let newTaxRate = this.calculateTaxRate(this.state.newIncome);
-    this.setState({ curTaxRate, newTaxRate });
   };
 
   render() {
@@ -182,8 +216,8 @@ class InputForm extends React.Component {
         </Form>
         The calculations are starting January 1, {this.state.labels[0]} and
         assuming the first two years are paying back Lambda School at 17%, then
-        investing that 17% in a general S&P 500 Index fund (~11% return from
-        1973-2016)
+        investing that 17% in a general S&P 500 Index fund (~10% return from
+        1987-2017)
         <hr />
         <Graph
           curData={this.state.curData}
