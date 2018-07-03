@@ -169,6 +169,32 @@ class InputForm extends React.Component {
   render() {
     return (
       <React.Fragment>
+        The calculations are starting January 1, {this.state.labels[0]} and
+        assuming the first two years are paying back Lambda School at 17%, then
+        investing that 17% in a general S&P 500 Index fund (~10% historical
+        return over long periods of time).<br />
+        <span>
+          Lambda total ({this.state.newMax.toLocaleString('en-US', {
+            style: 'currency',
+            currency: 'USD',
+          })}){' - '}pre total: ({this.state.curMax.toLocaleString('en-US', {
+            style: 'currency',
+            currency: 'USD',
+          })}){':  '}
+          for a difference of{' '}
+          <strong>
+            {(this.state.newMax - this.state.curMax).toLocaleString('en-US', {
+              style: 'currency',
+              currency: 'USD',
+            })}
+          </strong>
+        </span>
+        <hr />
+        <Graph
+          curData={this.state.curData}
+          newData={this.state.newData}
+          labels={this.state.labels}
+        />
         <Form inline>
           <div className="row">
             <div className="col-sm-4">
@@ -247,32 +273,7 @@ class InputForm extends React.Component {
             </div>
           </div>
         </Form>
-        The calculations are starting January 1, {this.state.labels[0]} and
-        assuming the first two years are paying back Lambda School at 17%, then
-        investing that 17% in a general S&P 500 Index fund (~10% historical
-        return over long periods of time).<br />
-        <span>
-          Lambda total ({this.state.newMax.toLocaleString('en-US', {
-            style: 'currency',
-            currency: 'USD',
-          })}){' - '}pre total: ({this.state.curMax.toLocaleString('en-US', {
-            style: 'currency',
-            currency: 'USD',
-          })}){':  '}
-          for a difference of{' '}
-          <strong>
-            {(this.state.newMax - this.state.curMax).toLocaleString('en-US', {
-              style: 'currency',
-              currency: 'USD',
-            })}
-          </strong>
-        </span>
-        <hr />
-        <Graph
-          curData={this.state.curData}
-          newData={this.state.newData}
-          labels={this.state.labels}
-        />
+        
       </React.Fragment>
     );
   }
