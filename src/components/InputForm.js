@@ -8,39 +8,14 @@ import Graph from './Graph';
 import './InputForm.css';
 
 const StyledDiv = styled.div`
-  // background: red;
+  //background: red;
 `;
-
-const Example = props => {
-  return (
-    <div>
-      <Card inverse>
-        <CardImg
-          width="100%"
-          src="https://placeholdit.imgix.net/~text?txtsize=33&txt=318%C3%97270&w=318&h=270&bg=333333&txtclr=666666"
-          alt="Card image cap"
-        />
-        <CardImgOverlay>
-          <CardTitle>Card Title</CardTitle>
-          <CardText>
-            This is a wider card with supporting text below as a natural lead-in
-            to additional content. This content is a little bit longer.
-          </CardText>
-          <CardText>
-            <small className="text-muted">Last updated 3 mins ago</small>
-          </CardText>
-        </CardImgOverlay>
-      </Card>
-    </div>
-  );
-};
 
 class InputForm extends React.Component {
   constructor(props) {
     super(props);
     //todo: maybe add age when get married
     this.state = {
-      name: '',
       age: 25,
       retireAge: 65,
       curIncome: 45000,
@@ -50,7 +25,7 @@ class InputForm extends React.Component {
       investmentReturn: 0.1,
       married: false,
       annualRaise: 0.04,
-      percentToInvest: 0.17,
+      percentOfIncomeToInvest: 17,
       curData: [],
       newData: [],
       newDataNoInvest: [],
@@ -66,8 +41,7 @@ class InputForm extends React.Component {
   }
 
   calculateData = () => {
-    /* prettier-ignore */
-    let {age, retireAge} = this.state;
+    let { age, retireAge } = this.state;
     let yearsWorking = retireAge - age;
 
     //true means current salary
@@ -77,20 +51,20 @@ class InputForm extends React.Component {
   };
 
   makeDataArr = (years, current) => {
-    let income, maxSalary, percentToInvest;
+    let annualSalary, maxSalary, percentOfIncomeToInvest;
     let labels = [];
     let yearStart = new Date().getFullYear() + 1;
 
     if (current) {
-      income = this.state.curIncome;
+      annualSalary = this.state.curIncome;
       maxSalary = 100000;
-      // percentToInvest = 0.0;
-      percentToInvest = 0.17;
+      // percentOfIncomeToInvest = 0.0;
+      percentOfIncomeToInvest = 0.17;
     } else {
-      income = this.state.newIncome;
+      annualSalary = this.state.newIncome;
       maxSalary = 150000;
-      // percentToInvest = 0;
-      percentToInvest = this.state.percentToInvest;
+      // percentOfIncomeToInvest = 0;
+      percentOfIncomeToInvest = this.state.percentOfIncomeToInvest / 100;
     }
 
     let dataArr = [];
@@ -101,13 +75,14 @@ class InputForm extends React.Component {
     let netWorth = 0;
 
     for (let i = 0; i <= years; i++) {
-      let afterTaxesSalary = income - income * this.calculateTaxRate(income);
-      let investedAmount = afterTaxesSalary * percentToInvest;
+      let afterTaxesSalary =
+        annualSalary - annualSalary * this.calculateTaxRate(annualSalary);
+      let investedAmount = afterTaxesSalary * percentOfIncomeToInvest;
       let afterInvestedSalary = afterTaxesSalary - investedAmount;
 
       //pay back Lambda School
-      if (!current && owedLambda < 30001 && i < 2 && income > 50000) {
-        owedLambda += income * 0.17;
+      if (!current && owedLambda < 30001 && i < 2 && annualSalary > 50000) {
+        owedLambda += annualSalary * 0.17;
         if (owedLambda > 30000) investedAmount = owedLambda - 30000;
         else investedAmount = 0;
       }
@@ -125,7 +100,7 @@ class InputForm extends React.Component {
       labels.push(yearStart + i);
 
       //annual raise
-      if (income < maxSalary) income *= 1 + this.state.annualRaise;
+      if (annualSalary < maxSalary) annualSalary *= 1 + this.state.annualRaise;
     }
     if (current) {
       this.setState({
@@ -147,9 +122,9 @@ class InputForm extends React.Component {
   handleInputChange = e => {
     let name = e.target.name;
     let value = e.target.value;
-    if (name === 'age' && value < 18) value = 18;
-    if (name === 'retireAge' && value <= this.state.age)
-      value = this.state.age + 1;
+    // if (name === 'age' && value < 18) value = 18;
+    // if (name === 'retireAge' && value <= this.state.age)
+    //   value = this.state.age + 1;
     if (name === 'curIncome' && value < 0) value = 0;
     if (name === 'newIncome' && value < 0) value = 0;
     this.setState({ [name]: value });
@@ -206,22 +181,30 @@ class InputForm extends React.Component {
           assuming the first two years are paying back Lambda School at 17%,
           then investing that 17% in a general S&P 500 Index fund (~10%
           historical return over long periods of time).<br />
-          <span>
-            Lambda total ({this.state.newMax.toLocaleString('en-US', {
-              style: 'currency',
-              currency: 'USD',
-            })}){' - '}pre total: ({this.state.curMax.toLocaleString('en-US', {
-              style: 'currency',
-              currency: 'USD',
-            })}){':  '}
-            for a difference of{' '}
-            <strong>
-              {(this.state.newMax - this.state.curMax).toLocaleString('en-US', {
+          {this.state.newMax && this.state.curMax ? (
+            <span>
+              Lambda total ({this.state.newMax.toLocaleString('en-US', {
                 style: 'currency',
                 currency: 'USD',
-              })}
-            </strong>
-          </span>
+              })}){' - '}pre total: ({this.state.curMax.toLocaleString(
+                'en-US',
+                {
+                  style: 'currency',
+                  currency: 'USD',
+                },
+              )}){':  '}
+              for a difference of{' '}
+              <strong>
+                {(this.state.newMax - this.state.curMax).toLocaleString(
+                  'en-US',
+                  {
+                    style: 'currency',
+                    currency: 'USD',
+                  },
+                )}
+              </strong>
+            </span>
+          ) : null}
         </StyledDiv>
         <hr />
         <Graph
@@ -229,24 +212,13 @@ class InputForm extends React.Component {
           newData={this.state.newData}
           labels={this.state.labels}
         />
-        <Form inline>
+        <Form inline className="form">
           <div className="row all">
-            <div className="col-sm-4">
-              <FormGroup>
-                <Label>Name</Label>
-                <Input
-                  name="name"
-                  onChange={this.handleInputChange}
-                  placeholder="Enter your name"
-                  value={this.state.name}
-                />
-              </FormGroup>
-            </div>
             <div className="col-sm all">
               <FormGroup>
                 <Label style={{ padding: '0 5px' }}>Age</Label>
                 <Input
-                  style={{ width: '35%' }}
+                  style={{ width: '70px' }}
                   type="number"
                   name="age"
                   onChange={this.handleInputChange}
@@ -254,15 +226,27 @@ class InputForm extends React.Component {
                 />
               </FormGroup>
             </div>
-            <div className="col-sm all">
+            <div className="col-sm-2 all">
               <FormGroup>
                 <Label style={{ padding: '0 5px' }}>Retire Age</Label>
                 <Input
-                  style={{ width: '36%' }}
+                  style={{ width: '70px' }}
                   type="number"
                   name="retireAge"
                   onChange={this.handleInputChange}
                   value={this.state.retireAge}
+                />
+              </FormGroup>
+            </div>
+            <div className="col-sm-2 all">
+              <FormGroup>
+                <Label style={{ padding: '0 5px' }}>% of income invested</Label>
+                <Input
+                  style={{ width: '70px' }}
+                  type="number"
+                  name="percentOfIncomeToInvest"
+                  onChange={this.handleInputChange}
+                  value={this.state.percentOfIncomeToInvest}
                 />
               </FormGroup>
             </div>
