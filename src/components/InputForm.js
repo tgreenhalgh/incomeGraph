@@ -1,7 +1,14 @@
 import React from 'react';
 /* prettier-ignore */
 import { Form, FormGroup, Label, Input } from 'reactstrap';
+import { Card, CardImg, CardText, CardBody, CardTitle, CardSubtitle, Button,CardImgOverlay } from 'reactstrap';
+import styled from 'styled-components';
 import Graph from './Graph';
+import './InputForm.css';
+
+const StyledDiv = styled.div`
+  background: red;
+`;
 
 class InputForm extends React.Component {
   constructor(props) {
@@ -169,26 +176,28 @@ class InputForm extends React.Component {
   render() {
     return (
       <React.Fragment>
-        The calculations are starting January 1, {this.state.labels[0]} and
-        assuming the first two years are paying back Lambda School at 17%, then
-        investing that 17% in a general S&P 500 Index fund (~10% historical
-        return over long periods of time).<br />
-        <span>
-          Lambda total ({this.state.newMax.toLocaleString('en-US', {
-            style: 'currency',
-            currency: 'USD',
-          })}){' - '}pre total: ({this.state.curMax.toLocaleString('en-US', {
-            style: 'currency',
-            currency: 'USD',
-          })}){':  '}
-          for a difference of{' '}
-          <strong>
-            {(this.state.newMax - this.state.curMax).toLocaleString('en-US', {
+        <StyledDiv>
+          The calculations are starting January 1, {this.state.labels[0]} and
+          assuming the first two years are paying back Lambda School at 17%,
+          then investing that 17% in a general S&P 500 Index fund (~10%
+          historical return over long periods of time).<br />
+          <span>
+            Lambda total ({this.state.newMax.toLocaleString('en-US', {
               style: 'currency',
               currency: 'USD',
-            })}
-          </strong>
-        </span>
+            })}){' - '}pre total: ({this.state.curMax.toLocaleString('en-US', {
+              style: 'currency',
+              currency: 'USD',
+            })}){':  '}
+            for a difference of{' '}
+            <strong>
+              {(this.state.newMax - this.state.curMax).toLocaleString('en-US', {
+                style: 'currency',
+                currency: 'USD',
+              })}
+            </strong>
+          </span>
+        </StyledDiv>
         <hr />
         <Graph
           curData={this.state.curData}
@@ -196,7 +205,7 @@ class InputForm extends React.Component {
           labels={this.state.labels}
         />
         <Form inline>
-          <div className="row">
+          <div className="row all">
             <div className="col-sm-4">
               <FormGroup>
                 <Label>Name</Label>
@@ -208,7 +217,7 @@ class InputForm extends React.Component {
                 />
               </FormGroup>
             </div>
-            <div className="col-sm">
+            <div className="col-sm all">
               <FormGroup>
                 <Label style={{ padding: '0 5px' }}>Age</Label>
                 <Input
@@ -220,7 +229,7 @@ class InputForm extends React.Component {
                 />
               </FormGroup>
             </div>
-            <div className="col-sm">
+            <div className="col-sm all">
               <FormGroup>
                 <Label style={{ padding: '0 5px' }}>Retire Age</Label>
                 <Input
@@ -232,7 +241,7 @@ class InputForm extends React.Component {
                 />
               </FormGroup>
             </div>
-            <div className="col-sm">
+            <div className="col-sm all">
               <FormGroup check>
                 <Label check>
                   <Input
@@ -246,7 +255,7 @@ class InputForm extends React.Component {
               </FormGroup>
             </div>
           </div>
-          <div className="row">
+          <div className="row all">
             <div className="col">
               <FormGroup>
                 <Label style={{ padding: '0 5px' }}>Current Salary</Label>
@@ -259,7 +268,7 @@ class InputForm extends React.Component {
                 />
               </FormGroup>
             </div>
-            <div className="col">
+            <div className="col all">
               <FormGroup>
                 <Label style={{ padding: '0 5px' }}>New Salary</Label>
                 <Input
@@ -273,7 +282,6 @@ class InputForm extends React.Component {
             </div>
           </div>
         </Form>
-        
       </React.Fragment>
     );
   }
