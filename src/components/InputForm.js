@@ -226,7 +226,7 @@ class InputForm extends React.Component {
                 />
               </FormGroup>
             </div>
-            <div className="col-sm-2 all">
+            <div className="col-sm all">
               <FormGroup>
                 <Label style={{ padding: '0 5px' }}>Retire Age</Label>
                 <Input
@@ -238,9 +238,9 @@ class InputForm extends React.Component {
                 />
               </FormGroup>
             </div>
-            <div className="col-sm-2 all">
+            <div className="col-sm all">
               <FormGroup>
-                <Label style={{ padding: '0 5px' }}>% of income invested</Label>
+                <Label style={{ padding: '0 5px' }}>% invested</Label>
                 <Input
                   style={{ width: '70px' }}
                   type="number"
